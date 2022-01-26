@@ -1,3 +1,5 @@
+source("resultat.R")
+
 library(microbenchmark)
 library(ggplot2)
 
@@ -17,14 +19,14 @@ ggplot(as.data.frame(cbind(n, mean_bimax_n)), aes(n, mean_bimax_n)) +
   geom_point(color = "steelblue") + 
   xlab("Nombre de lignes n") + 
   ylab("Temps moyen en millisecondes") + 
-  ggtitle("Temps moyen d'exécution sur 200 simulations pour chaque n")
+  ggtitle("Temps moyen d'exÃ©cution sur 200 simulations pour chaque n")
 
 ggplot(as.data.frame(cbind(n, mean_bimax_n)), aes(log(n), log(mean_bimax_n))) + 
   geom_line(linetype = "dashed", color = "steelblue") +
   geom_point(color = "steelblue") + 
   xlab("Log nombre de lignes n") + 
   ylab("Log temps moyen en millisecondes") + 
-  ggtitle("Log temps moyen d'exécution sur 200 simulations pour chaque n")+
+  ggtitle("Log temps moyen d'exÃ©cution sur 200 simulations pour chaque n")+
   geom_smooth(method=lm, formula = y ~ x, se=FALSE, color = "lightgreen")
 
 
@@ -49,14 +51,14 @@ ggplot(as.data.frame(cbind(m, mean_bimax_m)), aes(m, mean_bimax_m)) +
   geom_point(color = "steelblue") + 
   xlab("Nombre de colonnes m") + 
   ylab("Temps moyen en millisecondes") + 
-  ggtitle("Temps moyen d'exécution sur 200 simulations pour chaque m")
+  ggtitle("Temps moyen d'exÃ©cution sur 200 simulations pour chaque m")
 
 ggplot(as.data.frame(cbind(m, mean_bimax_m)), aes(log(m), log(mean_bimax_m))) + 
   geom_line(linetype = "dashed", color = "steelblue") +
   geom_point(color = "steelblue") + 
   xlab("Log nombre de colonnes m") + 
   ylab("Log temps moyen en millisecondes") + 
-  ggtitle("Log temps moyen d'exécution sur 200 simulations pour chaque m")+
+  ggtitle("Log temps moyen d'exÃ©cution sur 200 simulations pour chaque m")+
   geom_smooth(method=lm, formula = y ~ x, se=FALSE, color = "lightgreen")
 
 reg <- lm(log(mean_bimax_m) ~ log(m))
@@ -80,14 +82,14 @@ ggplot(as.data.frame(cbind(cluster, mean_bimax_c)), aes(cluster, mean_bimax_c)) 
   geom_point(color = "steelblue") + 
   xlab("Nombre de clusters nbClust") + 
   ylab("Temps moyen en millisecondes") + 
-  ggtitle("Temps moyen d'exécution sur 200 simulations pour chaque nbClust")
+  ggtitle("Temps moyen d'exÃ©cution sur 200 simulations pour chaque nbClust")
 
 ggplot(as.data.frame(cbind(cluster, mean_bimax_c)), aes(log(cluster), log(mean_bimax_c))) + 
   geom_line(linetype = "dashed", color = "steelblue") +
   geom_point(color = "steelblue") + 
   xlab("Log nombre de clusters nbClust") + 
   ylab("Log temps moyen en millisecondes") + 
-  ggtitle("Log temps moyen d'exécution sur 200 simulations pour chaque nbClust")+
+  ggtitle("Log temps moyen d'exÃ©cution sur 200 simulations pour chaque nbClust")+
   geom_smooth(method=lm, formula = y ~ x, se=FALSE, color = "lightgreen")
 
 reg <- lm(log(mean_bimax_c) ~ log(cluster))
@@ -110,14 +112,14 @@ ggplot(as.data.frame(cbind(both, mean_bimax_both)), aes(both, mean_bimax_both)) 
   geom_point(color = "steelblue") + 
   xlab("Nombre de lignes/colonnes") + 
   ylab("Temps moyen en millisecondes") + 
-  ggtitle("Temps moyen d'exécution sur 100 simulations")
+  ggtitle("Temps moyen d'exÃ©cution sur 100 simulations")
 
 ggplot(as.data.frame(cbind(both, mean_bimax_both)), aes(log(both), log(mean_bimax_both))) + 
   geom_line(linetype = "dashed", color = "steelblue") +
   geom_point(color = "steelblue") + 
   xlab("Log nombre de lignes/colonnes") + 
   ylab("Log temps moyen en millisecondes") + 
-  ggtitle("Log temps moyen d'exécution sur 100 simulations")+
+  ggtitle("Log temps moyen d'exÃ©cution sur 100 simulations")+
   geom_smooth(method=lm, formula = y ~ x, se=FALSE, color = "lightgreen")
 
 reg <- lm(log(mean_bimax_both) ~ log(both))
