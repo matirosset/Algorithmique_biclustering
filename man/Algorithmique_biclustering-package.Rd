@@ -1,6 +1,6 @@
-\name{Biclustering_Groupe1-package}
-\alias{Biclustering_Groupe1-package}
-\alias{Biclustering_Groupe1}
+\name{Algorithmique_biclustering-package}
+\alias{Algorithmique_biclustering-package}
+\alias{Algorithmique_biclustering}
 \docType{package}
 \title{
   A short title line describing what the package does
