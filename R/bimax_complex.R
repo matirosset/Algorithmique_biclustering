@@ -1,4 +1,5 @@
-source("resultat.R")
+source("R/resultat.R")
+source("R/bimax.R")
 
 library(microbenchmark)
 library(ggplot2)
