@@ -13,6 +13,8 @@ Les matrices binaires de grande dimension sont très présentes dans le domaine 
 ### Description du package
 
 Le package est divisé en plusieurs dossiers, dont les principaux sont :
-- R :  scripts en langage R des 3 algorithmes, résultats des algorithmes sur des exemples, simulations pour vérifier la complexité
+- R :  scripts en langage R des 3 algorithmes
+- resultats : résultats des algorithmes sur des exemples définis
+- simulation : script R permettant de réaliser des simulations pour vérifier la complexité
 - annexes : ensemble des articles scientifiques sur lesquels nous nous sommes informés
 - man : script de iBBiG en langage C++
