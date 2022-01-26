@@ -1,0 +1,248 @@
+---
+title: Projet Algorithmique - Biclustering
+subtitle: |
+  | Annexe Cheng & Church
+  | M2 Data Science
+author: "Groupe 1 : Rosset, Gaucher, Mazet"
+date: "26/01/2022"
+output:
+  prettydoc::html_pretty:
+    toc: true
+    toc_depth: 1
+    number_sections: true
+    css: style.css
+---
+
+```{r}
+
+## Some helper functions to calculate the CC score for node deletion
+
+ccscore <- function(mat){
+  cardI = nrow(mat)
+  cardJ = ncol(mat)
+  aiJ = matrix(rowMeans(mat), nrow=cardI, ncol=cardJ) # aiJ = rowMeans(mat)
+  aIj = matrix(colMeans(mat), nrow=cardI, ncol=cardJ, byrow=TRUE)
+  
+  score = sum( ( mat - aiJ - aIj + mean(mat) )^2 ) / (cardI*cardJ)
+  return(score)
+}
+
+rowscore <- function(mat){
+  cardI = nrow(mat)
+  cardJ = ncol(mat)
+  aiJ = matrix(rowMeans(mat), nrow=cardI, ncol=cardJ) # aiJ = rowMeans(mat)
+  aIj = matrix(colMeans(mat), nrow=cardI, ncol=cardJ, byrow=TRUE)
+  
+  score = rowSums( ( mat - aiJ - aIj + mean(mat) )^2 ) / cardJ
+  return(score)
+}
+
+colscore <- function(mat){
+  cardI = nrow(mat)
+  cardJ = ncol(mat)
+  aiJ = matrix(rowMeans(mat), nrow=cardI, ncol=cardJ) # aiJ = rowMeans(mat)
+  aIj = matrix(colMeans(mat), nrow=cardI, ncol=cardJ, byrow=TRUE)
+  
+  score = colSums( ( mat - aiJ - aIj + mean(mat) )^2 ) / cardI
+  return(score)
+}
+
+## Some helper functions to calculate the CC score for node addition and inverse node addition
+
+addrowscore<-function(mat,logr,logc){
+  aiJ = matrix(rowMeans(mat[,logc]),nrow=nrow(mat),ncol=ncol(mat))
+  aIj = matrix(colMeans(mat[logr,]),nrow=nrow(mat),ncol=ncol(mat),byrow=TRUE)
+  score = rowSums((mat- aiJ - aIj + mean(mat[logr,logc]))^2) / ncol(mat[logr,logc])
+  return(score)
+}
+
+iaddrowscore<-function(mat,logr,logc){
+  aiJ = matrix(rowMeans(mat[,logc]),nrow=nrow(mat),ncol=ncol(mat))
+  aIj = matrix(colMeans(mat[logr,]),nrow=nrow(mat),ncol=ncol(mat),byrow=TRUE)
+  score = rowSums((- mat + aiJ - aIj + mean(mat[logr,logc]))^2)/ncol(mat[logr,logc])
+  return(score)
+}
+
+addcolscore<-function(mat,logr,logc){
+  aiJ = matrix(rowMeans(mat[,logc]),nrow=nrow(mat),ncol=ncol(mat))
+  aIj = matrix(colMeans(mat[logr,]),nrow=nrow(mat),ncol=ncol(mat),byrow=TRUE)
+  score = colSums((mat - aiJ - aIj + mean(mat[logr,logc]))^2)/nrow(mat[logr,logc])
+  return(score)
+}
+
+
+# algorithm 1 from CC: Single Node Deletion
+
+cc1 <- function(mat,logr,logc,delta=1.5){
+  # Input: A, a matrix of real numbers, and T > 0, the maximum acceptable threshold (mean squared residue score)
+  # Output: A_IJ, a T-bicluster that is a submatrix of A with row set I and column set J, with a score no larger than T
+  
+  while(ccscore(mat[logr,logc])>delta){
+    di = rowscore(mat[logr,logc])
+    dj = colscore(mat[logr,logc])
+    mdi = which.max(di)
+    mdj = which.max(dj)
+    
+    # largest_col, largest_line = indexes in subset /!\
+    ifelse(di[mdi]>dj[mdj],
+           logr[logr][mdi] <- FALSE,
+           logc[logc][mdj] <- FALSE
+           )
+    if (!(sum(logr)>1 & sum(logc)>1)) break
+  }
+  ifelse(sum(logr)>1 & sum(logc)>1,
+         res <- list(logr,logc),
+         res <- list(0, warning(paste('No matirx with score smaller', delta,'found')))
+         )
+  return(res)
+}
+
+# algorithm 2 from CC: Multiple Node Deletion
+cc2 <- function(mat,logr,logc,delta,alpha=1.5){
+  mdi = 1
+  mdj = 1
+  while( (h = ccscore(mat[logr,logc]))>delta & (sum(mdi)+sum(mdj))>0 ) {
+    if(sum(logr)>100){
+      di = rowscore(mat[logr,logc])
+      mdi = di>(alpha*h)
+      if(sum(mdi) < (sum(logr)-1)){
+        logr[logr][mdi] = FALSE
+        h = ccscore(mat[logr,logc])
+      }
+      else{
+        print(warning(paste('Alpha', alpha,'to small!')))
+        mdi = 0
+      }
+    }
+    else{ mdi = 0 }
+    
+    if(sum(logc)>100){
+      dj = colscore(mat[logr,logc])
+      mdj = dj>(alpha*h)
+      if(sum(mdj) < (sum(logc)-1)){
+        logc[logc][mdj] = FALSE
+        }
+      else{
+        print(warning(paste('Alpha', alpha,'to small!')))
+        mdj = 0
+      }
+    }
+    else{ mdj = 0}
+  }
+  return (list(logr,logc))
+}
+
+# algorithm 3 from CC:  Node Addition
+cc3 = function(mat,logr,logc){
+  # Input: A, a matrix of real numbers, and T > 0, the maximum acceptable threshold (mean squared residue score), I and J signifying bicluster
+  # Output: I’ and J’ such that I included in I' and J included J’ with the property that H(I’, J’) <= H(I, J).
+  
+  br = 1
+  ilogr = rep(FALSE,length(logr))
+  while(br>0){
+    br1 = sum(logc)
+    br2 = sum(logr)
+    h = ccscore(mat[logr,logc])
+    dj = addcolscore(mat,logr,logc)
+    
+    mdj = dj<=h
+    logc[mdj] = TRUE
+    
+    h = ccscore(mat[logr,logc])
+    di = addrowscore(mat,logr,logc)
+    mdi = di<=h
+    logr[mdi] = TRUE
+    
+    idi = iaddrowscore(mat,logr,logc)
+    imdi = idi<=h
+    mat[!(logr==imdi)&imdi] = 1-mat[!(logr==imdi)&imdi]
+    logr[imdi] = TRUE
+    
+    br = sum(logc)+sum(logr)-br1-br2
+  }
+  return (list(logr,logc))
+}
+
+
+
+# Find biggest Bicluster:
+
+bigcc <- function(mat,delta,alpha=1.5){
+  logr = rep(TRUE,nrow(mat))
+  logc = rep(TRUE,ncol(mat))
+  step1 = cc2(mat,logr,logc,delta,alpha)
+  step2 = cc1(mat,step1[[1]],step1[[2]],delta)
+  if(sum(step2[[1]])==0){
+    res = list(0,warning(paste('Mo matrix with score smaller than', delta,'found')))
+  }
+  else{
+    res = cc3(mat,step2[[1]],step2[[2]])
+  }
+  return (res)
+}
+
+
+## Algorithm to find the number biggest bicluster.
+
+ccbiclust <- function(mat,delta,alpha=1.5,number=100, rand=FALSE){
+  ma = max(mat)
+  mi = min(mat)
+  x = matrix(FALSE,nrow=nrow(mat),ncol=number)
+  y = matrix(FALSE,nrow=number,ncol=ncol(mat))
+  logr = rep(TRUE,nrow(mat))
+  Stop = FALSE
+  logc = rep(TRUE,ncol(mat))
+  for(i in 1:number){
+    if(sum(logr)<2 || sum(logc)<2){
+      Stop = TRUE
+      break
+    }
+    erg = bigcc(mat[logr,],delta,alpha)
+    if(sum(erg[[1]])==0 || sum(erg[[2]])==0){
+      Stop = TRUE
+      break
+    }
+    else{
+      x[logr,i] = erg[[1]]
+      y[i,] = erg[[2]]
+      if(rand){
+        mat[erg[[1]],erg[[2]]] = sample(c(0,1),
+                                        sum(erg[[1]])*sum(erg[[2]]),
+                                        replace = TRUE)
+      }
+      else{
+        logr[logr][erg[[1]]] = FALSE
+      }
+    }
+  }
+  if(Stop){
+    return(list( 
+      "rows" = as.matrix(x[,1:(i-1)]),
+      "cols" = as.matrix(y[1:(i-1),]),
+      "number" = i-1))
+  }
+  else{
+    return(list(
+      "rows" = as.matrix(x),
+      "cols" = as.matrix(y),
+      "number" = i))
+  }
+}
+
+nbclust = 3
+alpha = 1.5
+delta = 0
+size = 20
+test <- binaryMatrix(size,size, nbClust = nbclust)
+image(test$matI)
+image(test$matR)
+algo = ccbiclust(test$matR, delta=delta, alpha=alpha, number=nbclust)
+
+for (i in 1:algo$number) {
+  #print(algo$rows[,i])
+  #print(algo$cols[i,])
+  heatmap(test$matR[algo$rows[,i],algo$cols[i,]], scale = "none", Rowv = NA, Colv = NA, main = "HeatMap Cluster")
+}
+
+```
+
