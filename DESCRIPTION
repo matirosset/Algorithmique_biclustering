@@ -1,4 +1,4 @@
-Package: Algorithmique_biclustering
+Package: Biclustering_Groupe1
 Type: Package
 Title: Rcpp package with biclustering algorithms (BiMax, Bibit, iBBiG)
 Version: 1.0
