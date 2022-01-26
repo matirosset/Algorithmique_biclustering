@@ -1,0 +1,53 @@
+---
+title: Projet Algorithmique - Biclustering
+subtitle: |
+  | Résultats
+  | M2 Data Science
+author: "Groupe 1 : Rosset, Gaucher, Mazet"
+date: "26/01/2022"
+output:
+  prettydoc::html_pretty:
+    toc: true
+    toc_depth: 1
+    number_sections: true
+    css: style.css
+---
+
+```{r}
+
+binaryMatrix <- function(n, p, nbClust = 10 , d1 = 1, d0 = 0) {
+  mat <- matrix(rbinom(n = n*p, size = 1, prob = d0),n,p)
+  clus1 <- rpois(nbClust, 10)
+  divX <- floor(clus1* n / sum(clus1))
+  divX[1] <- divX[1] + (n - sum(divX))
+  print(divX)
+  divX <- c(0, cumsum(divX))
+  
+  clus2 <- rpois(nbClust, 10)
+  divY <- floor(clus2* p / sum(clus2))
+  divY[1] <- divY[1] + (p - sum(divY))
+  print(divY)
+  divY <- c(0, cumsum(divY))
+  for(i in 1:nbClust){
+    mat[(divX[i]+1):divX[i+1], (divY[i]+1):divY[i+1]] <- rbinom(n = (divX[i+1]-divX[i])*(divY[i+1]-divY[i]), size = 1, prob = d1)
+  }
+  return(list(matI = mat, matR = mat[ sample(n), sample(p)]))
+}
+
+n = 50
+p = 10
+res <- binaryMatrix(n,p,nbClust = 2)
+rotate <- function(x) t(apply(x, 2, rev))
+image(rotate(res$matI))
+image(rotate(res$matR))
+
+
+res.bibit = bibit(res$matR)
+for (i in 1:length(res.bibit)) {
+  #print(res.bibit[[i]]$row)
+  #print(res.bibit[[i]]$col)
+  #print(res$matR[res.bibit[[i]]$row, res.bibit[[i]]$col])
+  image(res$matR[res.bibit[[i]]$row, res.bibit[[i]]$col])
+}
+
+```
