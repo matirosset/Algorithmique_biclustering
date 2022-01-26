@@ -10,7 +10,7 @@ should_we_add_row <- function(rho, row){
 #' @description Executing bibit algorithm
 #' @param matrix_binary a binary matrix with values 0 and 1
 #' @return list of biclusters (row and columns indexes)
-bibit_R <- function(matrix_binary){
+bibit <- function(matrix_binary){
   n = dim(matrix_binary)[1]
   p = dim(matrix_binary)[2]
   
