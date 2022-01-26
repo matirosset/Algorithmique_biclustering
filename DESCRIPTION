@@ -1,12 +1,11 @@
-Package: Biclustering_Groupe1
+Package: Algorithmique_biclustering
 Type: Package
-Title: What the Package Does in One 'Title Case' Line
+Title: Rcpp package with biclustering algorithms (BiMax, Bibit, iBBiG)
 Version: 1.0
 Date: 2022-01-26
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: One paragraph description of what the package does as one or more
-         full sentences.
+Author: Paul Mazet, Mathilda Rosset, Etienne Gaucher
+Maintainer: Paul Mazet, Mathilda Rosset, Etienne Gaucher
+Description: Biclustering algorithms written in different languages : R and Rcpp. We also provide a simulation file evaluating the time complexity of these algorithms and a result file with examples on binary matrices. The three available algorithm are BiMax (only in R), Bibit (only in R) and iBBiG (in R and Rcpp).
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.8)
 LinkingTo: Rcpp
