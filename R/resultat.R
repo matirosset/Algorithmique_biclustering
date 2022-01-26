@@ -1,3 +1,6 @@
+source("R/bimax.R")
+source("R/BiBit.R")
+
 #' Random binary matrix
 #'
 #' @description Create a random binary matrix with biclusters
@@ -9,7 +12,7 @@
 #' @return a list with matI (visible biclusters) and matR
 binaryMatrix <- function(n, p, nbClust = 10, d1 = 0.5, d0 = 0.5)
 {
-  # Construction d'une matrice (n,p) avec des 0 et 1, probabilité = d0
+  # Construction d'une matrice (n,p) avec des 0 et 1, probabilitÃ© = d0
   mat <- matrix(rbinom(n = n*p, size = 1, prob = d0), n, p)
   
   ratio <- floor(n/nbClust)
@@ -22,7 +25,7 @@ binaryMatrix <- function(n, p, nbClust = 10, d1 = 0.5, d0 = 0.5)
   divY <- sample(1:floor(p/nbClust), size =nbClust, replace = TRUE)
   divY <- c(0, floor(cumsum(divY)* p / sum(divY)))
   
-  # Modifie les valeurs de la matrice pour chaque bicluster avec probabilité = d1
+  # Modifie les valeurs de la matrice pour chaque bicluster avec probabilitÃ© = d1
   for(i in 1:nbClust)
   {
     mat[(divX[i]+1):divX[i+1],(divY[i]+1):divY[i+1]] <- rbinom(n = (divX[i+1]-divX[i])*(divY[i+1]-divY[i]), size = 1, prob = d1)
