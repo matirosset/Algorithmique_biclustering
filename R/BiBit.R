@@ -22,16 +22,13 @@ bibit <- function(matrix_binary){
   while (sum(row_not_already_biclustered) + sum(col_not_already_biclustered) > 0) {
     BCij_col = numeric(0)
     BCij_row = numeric(0)
-    print(col_not_already_biclustered)
-    print(row_not_already_biclustered)
+
     ij = sample(which(row_not_already_biclustered),2) # sans remplacement
     rhoij = product(matrix_binary[ij[1],col_not_already_biclustered],matrix_binary[ij[2],col_not_already_biclustered])
     while (sum(rhoij)==0) {
       ij = sample(which(row_not_already_biclustered),2) # sans remplacement
       rhoij = product(matrix_binary[ij[1],col_not_already_biclustered],matrix_binary[ij[2],col_not_already_biclustered])
     }
-    print(ij)
-    print(rhoij)
     
     BCij_row = c(BCij_row, ij)
     BCij_col = which(col_not_already_biclustered)[which(rhoij)]
