@@ -1,3 +1,5 @@
+source("resultat.R")
+
 library(microbenchmark)
 library(ggplot2)
 
