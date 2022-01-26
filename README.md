@@ -18,3 +18,9 @@ Le package est divisé en plusieurs dossiers, dont les principaux sont :
 - simulation : scripts R permettant de réaliser des simulations pour vérifier la complexité de BiMax et BiBit
 - annexes : ensemble des articles scientifiques sur lesquels nous nous sommes informés
 - man : script de iBBiG en langage C++
+
+
+### Import de notre package
+
+Pour importer notre package, il suffit simplement de l'importer avec devtools grâce à la commande suivante : 
+**devtools::install_github("matirosset/Algorithmique_biclustering")**
