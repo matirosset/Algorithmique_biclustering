@@ -121,5 +121,5 @@ iBBiG<-function(binaryMatrix,
     res[[i]] = BC
     i = i+1
    }
-   return(res)
+   return(res) 
 }
