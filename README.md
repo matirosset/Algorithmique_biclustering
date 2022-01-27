@@ -14,7 +14,7 @@ Les matrices binaires de grande dimension sont très présentes dans le domaine 
 
 Le package est divisé en plusieurs dossiers, dont les principaux sont :
 - R :  scripts en langage R de BiMax et BiBit, scripts en R et C++ de iBBiG
-- resultats : résultats des algorithmes sur des exemples définis
+- resultats : résultats des algorithmes sur des exemples définis et matrice binaire de LaMME
 - simulation : scripts R qui permettent de réaliser des simulations pour vérifier la complexité de BiMax et BiBit
 - annexes : ensemble des articles scientifiques sur lesquels nous nous sommes informés
 
