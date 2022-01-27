@@ -250,7 +250,7 @@ double mutation,double alpha){
 }
 
 // [[Rcpp::export]] //mandatory to export the function
-NumericVector clusterCovsC(double *covMat, NumericVector group, int *noCovs, int *noSigs,
+NumericVector clusterCovsCpp(double *covMat, NumericVector group, int *noCovs, int *noSigs,
   double *alpha, int *noPop, int *maxStag, double *mutation, double *SR, int *max_SP, double *SP){
 
     srand((unsigned)time(NULL));
