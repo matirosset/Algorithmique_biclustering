@@ -1,4 +1,4 @@
-source("")
+source("src/iBBiG.cpp")
 
 
 calculaterowScore <- function(colVector,binaryMatrix,alpha){
