@@ -1,5 +1,7 @@
 source("R/bimax.R")
 source("R/BiBit.R")
+source("R/iBBiG.R")
+
 
 #' Random binary matrix
 #'
@@ -165,19 +167,15 @@ print(M)
 reconst(E, M)
 
 ## Matrice avec biclusters imparfaits
-res <- binaryMatrix(50,50,5,0.9,0.1)
+res <- binaryMatrix(70,20,5,0.9,0.1)
 image(res$matI)
 image(res$matR)
 bimax(res$matR)
 
-
-
-
-
-
+#########################################################################################
+#########################################################################################
 
 # Test de l'algorithme Bibit
-
 
 n = 50
 p = 10
@@ -192,3 +190,28 @@ for (i in 1:length(res.bibit)) {
   #print(res$matR[res.bibit[[i]]$row, res.bibit[[i]]$col])
   image(res$matR[res.bibit[[i]]$row, res.bibit[[i]]$col])
 }
+
+#########################################################################################
+#########################################################################################
+
+# Données LaMME : iBBiG
+
+data <- read.delim("Vincent_matrice55motif_genes.txt", header = TRUE, sep = "\t")[,-1]
+colnames(data) <- NULL
+data[] <- lapply(data, function(x) as.numeric(x))
+data <- as.matrix(data)
+rotate <- function(x) t(apply(x, 2, rev))
+image(rotate(data))
+dim(data)
+
+res.iBBiG <- iBBiG(data,10)
+for (i in 1:10) {
+  #print(res.iBBiG[[i]]$row)
+  #print(res.iBBiG[[i]]$col)
+  #print(res$matR[res.iBBiG[[i]]$row, res.iBBiG[[i]]$col])
+  #print(sum(res.iBBiG[[i]]$row))
+  #print(sum(res.iBBiG[[i]]$col))
+  image(data[res.iBBiG[[i]]$row, res.iBBiG[[i]]$col])
+}
+       
+                 
