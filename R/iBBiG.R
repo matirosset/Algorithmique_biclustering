@@ -86,7 +86,8 @@ iBBiG<-function(binaryMatrix,
       colVector<-rep(0,colSize)
          
       # c function call
-      out <- clusterCovsC(as.double (binaryMatrix), colVector,
+      out <- clusterCovsC(as.double (binaryMatrix), 
+	        as.integer(colVector),
                 as.integer(colSize),
                 as.integer(rowSize),
                 as.double (alpha),
