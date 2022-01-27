@@ -1,4 +1,4 @@
-source("src/iBBiG.cpp")
+dyn.load("./src/iBBiG.so")
 
 
 calculaterowScore <- function(colVector,binaryMatrix,alpha){
@@ -85,8 +85,8 @@ iBBiG<-function(binaryMatrix,
    for (i in 1:nbClust){
       colVector<-rep(0,colSize)
          
-      # c++ function call
-      colVector <- clusterCovsCpp(as.double (binaryMatrix), colVector,
+      # c function call
+      out <- clusterCovsC(as.double (binaryMatrix), colVector,
                 as.integer(colSize),
                 as.integer(rowSize),
                 as.double (alpha),
@@ -96,6 +96,8 @@ iBBiG<-function(binaryMatrix,
                 as.double (success_ratio),
                 as.integer(max_sp),
                 as.double (sp))
+	   
+	  colVector <- out[[2]] 
 
 	  if (sum(colVector)==0){
            rowScore<-rep(FALSE,rowSize)
