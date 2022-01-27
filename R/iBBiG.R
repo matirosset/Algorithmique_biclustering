@@ -1,4 +1,4 @@
-dyn.load("src/iBBiG.so")
+dyn.load("iBBiG.so")
 
 
 calculaterowScore <- function(colVector,binaryMatrix,alpha){
