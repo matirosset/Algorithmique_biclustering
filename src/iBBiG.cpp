@@ -303,5 +303,5 @@ NumericVector clusterCovsCpp(double *covMat, NumericVector group, int *noCovs, i
     }
     //extract grouping with maximum score
     for (i=0;i<*noCovs;i++){ group[i]=pop[(i+1)*(*noPop)-1]; }
-    return group
+    return group;
 }
