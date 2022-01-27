@@ -19,10 +19,22 @@ bibit <- function(matrix_binary){
   col_not_already_biclustered = rep(T,p)
   k = 1
   
+  # Enlever les biclusters de taille 1xk
+  for (i in 1:n) {
+    rowi = matrix_binary[i,]
+    cols_j = which(rowi==1)
+    if (sum(matrix_binary[,cols_j[1]]) == 1){
+      row_not_already_biclustered[i] = F
+      col_not_already_biclustered[cols_j] = F
+      BCij = list("row" = i, "col" = sort(cols_j))
+      res[[k]] = BCij
+      k = k+1
+    }
+  }
+  
   while (sum(row_not_already_biclustered) + sum(col_not_already_biclustered) > 0) {
     BCij_col = numeric(0)
     BCij_row = numeric(0)
-
     ij = sample(which(row_not_already_biclustered),2) # sans remplacement
     rhoij = product(matrix_binary[ij[1],col_not_already_biclustered],matrix_binary[ij[2],col_not_already_biclustered])
     while (sum(rhoij)==0) {
