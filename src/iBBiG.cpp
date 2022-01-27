@@ -1,9 +1,11 @@
-#include <iostream>
 #include <cmath>
 #include <ctime>
-#include "iBBiG.h"
+#include <Rcpp.h> //to use the NumericVector object
+using namespace Rcpp; //to use the NumericVector object
+
 
 //scoring function (entropy based score)
+// [[Rcpp::export]] //mandatory to export the function
 double getScore(int *positions, int actualCovs, double *covMat, int noCovs, int noSigs, double alpha){
   double score=0;
   int i,j;
@@ -27,6 +29,7 @@ double getScore(int *positions, int actualCovs, double *covMat, int noCovs, int 
   return(score);
 }
 
+// [[Rcpp::export]] //mandatory to export the function
 void initializePop(long int *pop, int noPop, double *covMat, int noCovs, int noSigs, double alpha){
    int index=0;
    int r1,r2,i,j;
@@ -57,7 +60,7 @@ void initializePop(long int *pop, int noPop, double *covMat, int noCovs, int noS
 }
 
 
-// r -> pop = pop[order(scores)]
+// [[Rcpp::export]] //mandatory to export the function
 void mysort(double* scores, int* order, int N){
   int i, j, t1;
   double v, t;
@@ -100,6 +103,7 @@ void sortPop(long int *pop,int noCovs,int noPop,double *scores){
 
 
 //parent selection
+// [[Rcpp::export]] //mandatory to export the function
 int selectParent(double *SP){
    double r=rand(); r/=RAND_MAX; // on génère une probabilité
    int index=0;
@@ -108,6 +112,7 @@ int selectParent(double *SP){
 }
 
 //generates the next generation of children
+// [[Rcpp::export]] //mandatory to export the function
 void generateChildren(
 long int *pop, double *covMat, double *scores,
 int noPop, int noCov, int noSigs,
@@ -244,7 +249,8 @@ double mutation,double alpha){
    for (i=0;i<poolIndex;i++){ free(poolPop[i]); }
 }
 
-void clusterCovsC(double *covMat, int *group, int *noCovs, int *noSigs,
+// [[Rcpp::export]] //mandatory to export the function
+NumericVector clusterCovsC(double *covMat, NumericVector group, int *noCovs, int *noSigs,
   double *alpha, int *noPop, int *maxStag, double *mutation, double *SR, int *max_SP, double *SP){
 
     srand((unsigned)time(NULL));
@@ -297,4 +303,5 @@ void clusterCovsC(double *covMat, int *group, int *noCovs, int *noSigs,
     }
     //extract grouping with maximum score
     for (i=0;i<*noCovs;i++){ group[i]=pop[(i+1)*(*noPop)-1]; }
+    return group
 }
